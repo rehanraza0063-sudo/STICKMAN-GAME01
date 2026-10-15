@@ -1,0 +1,13 @@
+{
+  "name": "stickman-fight",
+  "version": "1.0.0",
+  "description": "Stickman Fight Arcade Brawl with Web Audio SFX & Procedural BGM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "py": "python server.py"
+  },
+  "keywords": ["game", "stickman", "web-audio", "arcade", "canvas"],
+  "author": "Antigravity",
+  "license": "MIT"
+}

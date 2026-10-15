@@ -1,0 +1,406 @@
+/* ==========================================================================
+   Stickman Fight - Cyber Arcade Theme Styles
+   ========================================================================== */
+
+:root {
+    --bg-dark: #07090e;
+    --panel-bg: rgba(15, 23, 42, 0.85);
+    --panel-border: rgba(56, 189, 248, 0.25);
+    --p1-cyan: #00e5ff;
+    --p1-cyan-glow: rgba(0, 229, 255, 0.4);
+    --p2-crimson: #ff1744;
+    --p2-crimson-glow: rgba(255, 23, 68, 0.4);
+    --gold: #ffea00;
+    --energy-purple: #a855f7;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    padding: 10px;
+    background-image: 
+        radial-gradient(circle at 50% 10%, rgba(30, 58, 138, 0.2) 0%, transparent 60%),
+        radial-gradient(circle at 80% 90%, rgba(225, 29, 72, 0.15) 0%, transparent 50%);
+}
+
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1040px;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   Header & Fighter Health Bars HUD
+   ========================================================================== */
+
+.hud-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 140px 1fr;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 12px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.player-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.player-hud.p2 {
+    align-items: flex-end;
+}
+
+.fighter-info {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.fighter-name {
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+}
+
+.p1 .fighter-name {
+    color: var(--p1-cyan);
+    text-shadow: 0 0 10px var(--p1-cyan-glow);
+}
+
+.p2 .fighter-name {
+    color: var(--p2-crimson);
+    text-shadow: 0 0 10px var(--p2-crimson-glow);
+}
+
+.rounds-won {
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-shadow: 0 0 8px rgba(255, 234, 0, 0.6);
+}
+
+/* Dual Layer Health Bars (Ghost Damage) */
+.bar-track {
+    width: 100%;
+    max-width: 380px;
+    height: 18px;
+    background: #1e293b;
+    border-radius: 9px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transition: width 0.1s ease-out;
+}
+
+.p1 .bar-fill { left: 0; }
+.p2 .bar-fill { right: 0; }
+
+.health-ghost {
+    background: #ef4444;
+    opacity: 0.7;
+    z-index: 1;
+    transition: width 0.4s ease-out;
+}
+
+.health-fill {
+    z-index: 2;
+}
+
+.p1 .health-fill {
+    background: linear-gradient(90deg, #0284c7, var(--p1-cyan));
+    box-shadow: 0 0 12px var(--p1-cyan);
+}
+
+.p2 .health-fill {
+    background: linear-gradient(90deg, var(--p2-crimson), #fb7185);
+    box-shadow: 0 0 12px var(--p2-crimson);
+}
+
+/* Super Energy Meter */
+.energy-track {
+    width: 80%;
+    max-width: 300px;
+    height: 8px;
+    background: #0f172a;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #9333ea, #c084fc);
+    box-shadow: 0 0 8px #a855f7;
+    transition: width 0.15s ease-out;
+}
+
+.hud-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.vs-logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-style: italic;
+    background: linear-gradient(135deg, var(--p1-cyan), #ffffff, var(--p2-crimson));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+}
+
+/* Audio Visualizer */
+.audio-visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 24px;
+}
+
+.viz-bar {
+    width: 4px;
+    height: 4px;
+    background: var(--p1-cyan);
+    border-radius: 2px;
+    transition: height 0.05s ease;
+}
+
+/* ==========================================
+   Canvas Arena Frame
+   ========================================== */
+
+.canvas-container {
+    width: 100%;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 229, 255, 0.15);
+    background: #000;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1000 / 600;
+}
+
+/* ==========================================
+   Control Bar & Settings Panel
+   ========================================== */
+
+.controls-toolbar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(12px);
+    border-radius: 10px;
+    padding: 10px 18px;
+    gap: 12px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+button.arcade-btn {
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+button.arcade-btn:hover {
+    background: linear-gradient(180deg, #334155, #1e293b);
+    border-color: var(--p1-cyan);
+    color: var(--p1-cyan);
+    box-shadow: 0 0 10px var(--p1-cyan-glow);
+    transform: translateY(-1px);
+}
+
+button.arcade-btn.active {
+    background: linear-gradient(180deg, #0284c7, #0369a1);
+    border-color: var(--p1-cyan);
+    color: #fff;
+    box-shadow: 0 0 12px var(--p1-cyan-glow);
+}
+
+select.arcade-select {
+    background: #0f172a;
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+select.arcade-select:hover, select.arcade-select:focus {
+    border-color: var(--p1-cyan);
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 70px;
+    height: 6px;
+    background: #334155;
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--p1-cyan);
+    cursor: pointer;
+    box-shadow: 0 0 6px var(--p1-cyan);
+}
+
+/* ==========================================
+   Keybindings & Move Guide Overlay
+   ========================================== */
+
+.moves-reference {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(12px);
+    border-radius: 10px;
+    padding: 14px 20px;
+}
+
+.player-guide {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.guide-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.p1-guide .guide-title { color: var(--p1-cyan); }
+.p2-guide .guide-title { color: var(--p2-crimson); }
+
+.key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+}
+
+.key-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #cbd5e1;
+}
+
+.key-badge {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: 26px;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .moves-reference {
+        grid-template-columns: 1fr;
+    }
+    .hud-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .player-hud.p2 {
+        align-items: flex-start;
+    }
+    .p2 .bar-fill {
+        left: 0;
+        right: auto;
+    }
+}
